@@ -14,15 +14,29 @@ const xlsxScript = document.createElement("script");
 xlsxScript.src = chrome.runtime.getURL("xlsx.min.js");
 document.head.appendChild(xlsxScript);
 
-// Create the button
+
 const button = document.createElement("button");
 button.innerText = "Upload";
-button.style.backgroundColor = "black";
+button.style.backgroundColor = "#4285f4"; // Change background color to a modern color
 button.style.color = "white";
-button.style.padding = "3px";
+button.style.padding = "8px 16px"; // Increase padding for a larger button
 button.style.border = "none";
-button.style.borderRadius = "3px";
+button.style.borderRadius = "20px"; // Adjust border radius for a rounded rectangle shape
+button.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.25)"; // Add a subtle box shadow for depth
+button.style.fontWeight = "bold"; // Apply bold font weight for emphasis
+button.style.textTransform = "uppercase"; // Convert text to uppercase for a modern look
+button.style.transition = "background-color 0.3s ease"; // Add transition for smooth hover effect
 button.style.margin = "3px";
+
+button.addEventListener("mouseover", function() {
+  button.style.backgroundColor = "#3367D6"; // Change background color on hover
+});
+
+button.addEventListener("mouseout", function() {
+  button.style.backgroundColor = "#4285f4"; // Revert background color on mouseout
+});
+
+document.body.appendChild(button);
 
 // Create the progress bar container
 const progressContainer = document.createElement("div");
