@@ -10,6 +10,17 @@ Progress bar in use below as file is being uploaded
 
 ![progress bar in use 2](https://github.com/ayushk1122/fileGPT-chrome-extension/assets/65365975/90ff61fe-4a91-48bd-8f56-060b37e85a61)
 
+Page to upload chrome extension folder
+
+Steps to do so
+
+1. Turn on developer mode as shown in top right of page
+2. Click the load unpacked button
+3. Upload folder with manifest and content files, the uploadFileChromeExten folder in my github repo
+4. Activate chrome extension by toggling blue swith as show in image
+
+![extension upload page](https://github.com/ayushk1122/fileGPT-chrome-extension/assets/65365975/46caafc8-fe04-48fa-918f-3ec1cb0ec193)
+
 
 
 
