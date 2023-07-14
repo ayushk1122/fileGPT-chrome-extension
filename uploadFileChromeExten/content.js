@@ -16,7 +16,7 @@ document.head.appendChild(xlsxScript);
 
 // Create the button
 const button = document.createElement("button");
-button.innerText = "Submit File";
+button.innerText = "Upload";
 button.style.backgroundColor = "black";
 button.style.color = "white";
 button.style.padding = "3px";
