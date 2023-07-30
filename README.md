@@ -21,6 +21,9 @@ Steps to do so
 
 ![extension upload page](https://github.com/ayushk1122/fileGPT-chrome-extension/assets/65365975/46caafc8-fe04-48fa-918f-3ec1cb0ec193)
 
+Screen Recorded Demo of Extension in Use 
+https://youtu.be/lKtJtR3dPLs
+
 
 
 
