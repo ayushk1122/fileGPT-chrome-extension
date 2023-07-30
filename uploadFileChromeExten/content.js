@@ -1,7 +1,7 @@
 // Set the value of GlobalWorkerOptions.workerSrc property to the URL of the local pdf.worker.min.js file
 if (typeof window !== "undefined" && "pdfjsLib" in window) {
   window["pdfjsLib"].GlobalWorkerOptions.workerSrc =
-    chrome.runtime.getURL("pdf.worker.min.js");
+      chrome.runtime.getURL("pdf.worker.min.js");
 }
 
 // Load Mammoth.js library
@@ -13,7 +13,6 @@ document.head.appendChild(script);
 const xlsxScript = document.createElement("script");
 xlsxScript.src = chrome.runtime.getURL("xlsx.min.js");
 document.head.appendChild(xlsxScript);
-
 
 const button = document.createElement("button");
 button.innerText = "Upload";
@@ -77,63 +76,63 @@ button.addEventListener("click", async () => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept =
-    ".txt,.js,.py,.html,.css,.json,.csv,.pdf,.doc,.docx,.xls,.xlsx"; // Add .xls and .xlsx to accepted file types
+      ".txt,.js,.py,.html,.css,.json,.csv,.pdf,.doc,.docx,.xls,.xlsx"; // Add .xls and .xlsx to accepted file types
 
   // Add a change event listener to the input element
   input.addEventListener("change", async () => {
-    // Reset progress bar once a new file is inserted
-    progressBar.style.width = "0%";
-    progressBar.style.backgroundColor = "#32a9db";
+      // Reset progress bar once a new file is inserted
+      progressBar.style.width = "0%";
+      progressBar.style.backgroundColor = "#32a9db";
 
-    // Read the file as text or extract text from PDF/Word/Excel file
-    const file = input.files[0];
-    let text;
-    if (file.type === "application/pdf") {
-      text = await extractTextFromPdfFile(file);
-    } else if (
-      file.type === "application/msword" ||
-      file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
-      text = await extractTextFromWordFile(file);
-    } else if (
-      file.type === "application/vnd.ms-excel" ||
-      file.type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ) {
-      text = await extractTextFromExcelFile(file);
-    } else {
-      text = await file.text();
-    }
-    // Get the chunk size from the input element
-    const chunkSize = parseInt(chunkSizeInput.value);
-
-    // Split the text into chunks of the specified size
-    const numChunks = Math.ceil(text.length / chunkSize);
-    for (let i = 0; i < numChunks; i++) {
-      const chunk = text.slice(i * chunkSize, (i + 1) * chunkSize);
-
-      // Submit the chunk to the conversation
-      await submitConversation(chunk, i + 1, file.name);
-
-      // Update the progress bar
-      progressBar.style.width = `${((i + 1) / numChunks) * 100}%`;
-
-      // Wait for ChatGPT to be ready
-      let chatgptReady = false;
-      while (!chatgptReady) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        chatgptReady = !document.querySelector(
-          ".text-2xl > span:not(.invisible)"
-        );
+      // Read the file as text or extract text from PDF/Word/Excel file
+      const file = input.files[0];
+      let text;
+      if (file.type === "application/pdf") {
+          text = await extractTextFromPdfFile(file);
+      } else if (
+          file.type === "application/msword" ||
+          file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
+          text = await extractTextFromWordFile(file);
+      } else if (
+          file.type === "application/vnd.ms-excel" ||
+          file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+          text = await extractTextFromExcelFile(file);
+      } else {
+          text = await file.text();
       }
-    }
+      // Get the chunk size from the input element
+      const chunkSize = parseInt(chunkSizeInput.value);
 
-    // Finish updating the progress bar
-    progressBar.style.backgroundColor = "#32a9db";
+      // Split the text into chunks of the specified size
+      const numChunks = Math.ceil(text.length / chunkSize);
+      for (let i = 0; i < numChunks; i++) {
+          const chunk = text.slice(i * chunkSize, (i + 1) * chunkSize);
 
-    // Enable the button after finishing the process
-    button.disabled = false;
+          // Submit the chunk to the conversation
+          await submitConversation(chunk, i + 1, file.name);
+
+          // Update the progress bar
+          progressBar.style.width = `${((i + 1) / numChunks) * 100}%`;
+
+          // Wait for ChatGPT to be ready
+          let chatgptReady = false;
+          while (!chatgptReady) {
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              chatgptReady = !document.querySelector(
+                  ".text-2xl > span:not(.invisible)"
+              );
+          }
+      }
+
+      // Finish updating the progress bar
+      progressBar.style.backgroundColor = "#32a9db";
+
+      // Enable the button after finishing the process
+      button.disabled = false;
   });
 
   // Click the input element to trigger the file selection dialog
@@ -209,18 +208,23 @@ button.addEventListener("dragover", (event) => {
   button.style.backgroundColor = "grey";
 });
 
-
-
+button.addEventListener("dragleave", (event) => {
+  event.preventDefault();
+  // Reset the background color to the original color when the drag operation is over
+  button.style.backgroundColor = "#4285f4";
+});
 
 // Define a function that extracts text from a PDF file using pdf.js library and window['pdfjsLib'] object reference
 async function extractTextFromPdfFile(file) {
   const pdfDataUrl = URL.createObjectURL(file);
-  const pdfDoc = await window["pdfjsLib"].getDocument(pdfDataUrl).promise;
+  const pdfDoc = await window["pdfjsLib"].getDocument(pdfDataUrl)
+      .promise;
   let textContent = "";
   for (let i = 1; i <= pdfDoc.numPages; i++) {
-    const page = await pdfDoc.getPage(i);
-    const pageTextContent = await page.getTextContent();
-    textContent += pageTextContent.items.map((item) => item.str).join(" ");
+      const page = await pdfDoc.getPage(i);
+      const pageTextContent = await page.getTextContent();
+      textContent += pageTextContent.items.map((item) => item.str)
+          .join(" ");
   }
   return textContent;
 }
@@ -228,50 +232,57 @@ async function extractTextFromPdfFile(file) {
 // Define the extractTextFromWordFile function
 async function extractTextFromWordFile(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const arrayBuffer = event.target.result;
-      const options = { includeDefaultStyleMap: true }; // Customize options as needed
-      window.mammoth
-        .extractRawText({ arrayBuffer }, options)
-        .then((result) => {
-          const text = result.value;
-          resolve(text);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    };
-    reader.onerror = function (event) {
-      reject(new Error("Error occurred while reading the Word file."));
-    };
-    reader.readAsArrayBuffer(file);
+      const reader = new FileReader();
+      reader.onload = function(event) {
+          const arrayBuffer = event.target.result;
+          const options = {
+              includeDefaultStyleMap: true
+          }; // Customize options as needed
+          window.mammoth
+              .extractRawText({
+                  arrayBuffer
+              }, options)
+              .then((result) => {
+                  const text = result.value;
+                  resolve(text);
+              })
+              .catch((error) => {
+                  reject(error);
+              });
+      };
+      reader.onerror = function(event) {
+          reject(new Error("Error occurred while reading the Word file."));
+      };
+      reader.readAsArrayBuffer(file);
   });
 }
 
 // Define the extractTextFromExcelFile function
 async function extractTextFromExcelFile(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const arrayBuffer = event.target.result;
-      const options = {
-        type: "array",
-        cellFormula: false,
-        cellHTML: false,
-        cellStyles: false,
-      }; // Customize options as needed
-      const workbook = XLSX.read(arrayBuffer, options);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      const text = jsonData.flat().join(" ");
-      resolve(text);
-    };
-    reader.onerror = function (event) {
-      reject(new Error("Error occurred while reading the Excel file."));
-    };
-    reader.readAsArrayBuffer(file);
+      const reader = new FileReader();
+      reader.onload = function(event) {
+          const arrayBuffer = event.target.result;
+          const options = {
+              type: "array",
+              cellFormula: false,
+              cellHTML: false,
+              cellStyles: false,
+          }; // Customize options as needed
+          const workbook = XLSX.read(arrayBuffer, options);
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+              header: 1
+          });
+          const text = jsonData.flat()
+              .join(" ");
+          resolve(text);
+      };
+      reader.onerror = function(event) {
+          reject(new Error("Error occurred while reading the Excel file."));
+      };
+      reader.readAsArrayBuffer(file);
   });
 }
 
@@ -281,11 +292,13 @@ async function submitConversation(text, part, filename) {
 
   // Set the value of the textarea
   textarea.value = `Part ${part} of ${filename}: \n\n ${text}`;
-  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+  textarea.dispatchEvent(new Event("input", {
+      bubbles: true
+  }));
 
   // Find the container element
   const container = document.querySelector(
-    ".flex.flex-col.w-full.flex-grow.md\\:py-4.md\\:pl-4"
+      ".flex.flex-col.w-full.flex-grow.md\\:py-4.md\\:pl-4"
   );
 
   // Find the button element within the container
@@ -293,8 +306,8 @@ async function submitConversation(text, part, filename) {
 
   // Check if the button is disabled
   if (submitButton.disabled) {
-    // Enable the button
-    submitButton.disabled = false;
+      // Enable the button
+      submitButton.disabled = false;
   }
 
   // Click the button
@@ -304,46 +317,53 @@ async function submitConversation(text, part, filename) {
 }
 
 // Periodically check if the button has been added to the page and add it if it hasn't
-const targetSelector =
-  ".px-3.pb-3.pt-2.text-center.md\\:px-4.md\\:pb-6.md\\:pt-3";
+const existingElementSelector =
+  '[class*="pb-3"][class*="pt-2"][class*="text-center"]';
+const existingElement = document.querySelector(existingElementSelector);
+
 const intervalId = setInterval(() => {
-  const targetElement = document.querySelector(targetSelector);
-  if (targetElement && !targetElement.contains(button)) {
-    // Create a wrapper div to hold the target element and the button
-    const wrapperDiv = document.createElement("div");
-    wrapperDiv.style.display = "flex";
-    wrapperDiv.style.flexDirection = "column";
+  const existingElement = document.querySelector(existingElementSelector);
 
-    // Insert the button before the target element
-    wrapperDiv.appendChild(button);
+  if (existingElement && !existingElement.contains(button)) {
+      // Create a wrapper div to hold the existing element and the button
+      const wrapperDiv = document.createElement("div");
+      wrapperDiv.style.display = "flex";
+      wrapperDiv.style.flexDirection = "column";
 
-    // Insert the progress bar container before the button
-    wrapperDiv.appendChild(progressContainer);
+      // Get the parent of the existing element
+      const parentElement = existingElement.parentNode;
 
-    // Insert the chunk size label and input before the progress bar container
-    wrapperDiv.appendChild(chunkSizeLabel);
+      // Insert the button before the existing element
+      wrapperDiv.appendChild(button);
 
-    // Replace the target element with the wrapper div
-    targetElement.parentNode.replaceChild(wrapperDiv, targetElement);
+      // Insert the progress bar container before the button
+      wrapperDiv.appendChild(progressContainer);
 
-    // Move the target element into the wrapper div
-    wrapperDiv.appendChild(targetElement);
+      // Insert the chunk size label and input before the progress bar container
+      wrapperDiv.appendChild(chunkSizeLabel);
 
-    // Set the custom styles for the container
-    wrapperDiv.style.width = "750px"; // Replace "400px" with your desired width value
-    wrapperDiv.style.margin = "0 auto"; // Center the container horizontally
-    //wrapperDiv.style.marginLeft = "455px"; // Move the container 50px to the right
-    wrapperDiv.parentNode.style.justifyContent = "center";
+      // Append the wrapper div to the parent of the existing element
+      parentElement.appendChild(wrapperDiv);
 
-    // Clear the interval as the button has been added
-    clearInterval(intervalId);
+      // Move the existing element into the wrapper div
+      wrapperDiv.appendChild(existingElement);
+
+      // Set the custom styles for the container
+      wrapperDiv.style.width = "750px"; // Replace "400px" with your desired width value
+      wrapperDiv.style.margin = "0 auto"; // Center the container horizontally
+      //wrapperDiv.style.marginLeft = "455px"; // Move the container 50px to the right
+      wrapperDiv.parentNode.style.justifyContent = "center";
+
+      // Clear the interval as the button has been added
+      clearInterval(intervalId);
   }
 }, 1000);
 
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "enableButton") {
-    // Enable the button
-    button.disabled = false;
+      // Enable the button
+      button.disabled = false;
   }
 });
+
