@@ -5,7 +5,7 @@
   "version": "1.2.2",
   "manifest_version": 3,
   "description": "A Chrome extension that allows you to upload large files in chunks.",
-  "permissions": ["*://chat.openai.com/*"],
+  //"permissions": ["*://chat.openai.com/*"],
   "action": {},
   "icons": {
     "16": "logo16.png",
